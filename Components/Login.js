@@ -1,6 +1,8 @@
 import React from 'react'
 import { View, Text, StyleSheet, TextInput, Image, ScrollView, AsyncStorage } from 'react-native'
 import { Button } from 'native-base'
+import * as Animatable from 'react-native-animatable';
+
 
 class Login extends React.Component {
 
@@ -13,7 +15,7 @@ class Login extends React.Component {
     }
 
     _connection() {
-        this._storeData('username', this.state.username)
+        //this._storeData('username', this.state.username)
         this._retrieveData('username')
     }
 
@@ -25,32 +27,59 @@ class Login extends React.Component {
         }
       };
 
-      _retrieveData = async (get) => {
+
+
+      login = () => {
+          fetch('http://ec2-3-17-12-13.us-east-2.compute.amazonaws.com/api-wimo/getUserById', {
+              method : 'POST',
+              headers : {
+                  'Accept' : 'application/json',
+                  'Content-Type' : 'application/json'
+              },
+              body : JSON.stringify({
+                id : 1
+              })
+          })
+          .then((response) => response.json())
+          .then((res) => {
+              AsyncStorage.setItem('user', JSON.stringify(res.user[0]) );
+            
+              this._retrieveData('user')
+              
+          })
+
+      }
+
+      _retrieveData = async () => {
         try {
-          const value = await AsyncStorage.getItem(get);
+          const value = await AsyncStorage.getItem('user');
           if (value !== null) {
-            // We have data!!
-            this.props.navigation.replace("Profil", { username : value })
+            //console.log(value);
+            this.props.navigation.replace('Profil', { user : value })
+
           }
         } catch (error) {
-          // Error retrieving data
+          console.log(error);
         }
       };
       
       render() {
-        {this._retrieveData('username')}
+        {AsyncStorage.removeItem('user')}
+        {/*this._retrieveData('username')*/}
         return (
             <ScrollView>
                 <View style={ styles.container }>
                     <View style={{ justifyContent : 'center', alignItems : 'center', marginTop : 30 }}>
-                        <Image 
-                        source={{ uri : 'https://img.icons8.com/bubbles/2x/bus.png' }}
-                        style={ styles.busImage }
+                        <Animatable.Image 
+                            animation="pulse"
+                            iterationCount="infinite"
+                            source={{ uri : 'https://img.icons8.com/bubbles/2x/bus.png' }}
+                            style={ styles.busImage }
                         />
                     </View>
                     <TextInput onChangeText={(text) => this.setState({ username : text }) } style={ styles.textInput } placeholder={"Identifiants"}/>
                     <TextInput style={ styles.textInput } placeholder={"Mot de passe"}/>
-                    <Button onPress={() => this._connection()} style={[styles.buttonConnect, { backgroundColor : '#00a8ff' }]}><Text style={ styles.textButton }> Se connecter </Text></Button>
+                    <Button onPress={() => this.login()} style={[styles.buttonConnect, { backgroundColor : '#00a8ff' }]}><Text style={ styles.textButton }> Se connecter </Text></Button>
 
                 </View>
             </ScrollView>
