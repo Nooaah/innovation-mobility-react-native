@@ -11,7 +11,6 @@ class Profil extends React.Component {
         user = JSON.parse(user);
         //(user)
         //Faire l'appel API pour récupérer dans la base ici
-        const points = 15
         return (
             <View style={{ flex : 1, justifyContent : 'center', alignItems : 'center' }}>
                 <View style={{ flex : 1, marginTop : 30 }}>
@@ -27,7 +26,7 @@ class Profil extends React.Component {
                     animation="pulse"
                     iterationCount="infinite"
                     style={{ textAlign : 'center', fontSize : 40, marginTop : -120, color : '#00a8ff', fontWeight : 'bold' }}>
-                    { points }
+                    { user.points }
                     </Animatable.Text>
 
                 </View>
