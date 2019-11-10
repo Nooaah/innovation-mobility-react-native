@@ -78,7 +78,10 @@ class Login extends React.Component {
                         />
                     </View>
                     <TextInput onChangeText={(text) => this.setState({ username : text }) } style={ styles.textInput } placeholder={"Identifiants"}/>
-                    <TextInput style={ styles.textInput } placeholder={"Mot de passe"}/>
+                    <TextInput 
+                    secureTextEntry={true}
+                    style={ styles.textInput } 
+                    placeholder={"Mot de passe"}/>
                     <Button onPress={() => this.login()} style={[styles.buttonConnect, { backgroundColor : '#00a8ff' }]}><Text style={ styles.textButton }> Se connecter </Text></Button>
 
                 </View>
