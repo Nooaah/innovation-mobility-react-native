@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TextInput, Image, ScrollView, AsyncStorage } from 'react-native'
+import { View, Text, StyleSheet, TextInput, Image, ScrollView, AsyncStorage, Alert } from 'react-native'
 import { Button } from 'native-base'
 import * as Animatable from 'react-native-animatable';
 
@@ -30,21 +30,33 @@ class Login extends React.Component {
 
 
       login = () => {
-          fetch('http://ec2-3-17-12-13.us-east-2.compute.amazonaws.com/api-wimo/getUserById', {
+          fetch('http://ec2-3-17-12-13.us-east-2.compute.amazonaws.com/api-wimo/login', {
               method : 'POST',
               headers : {
                   'Accept' : 'application/json',
                   'Content-Type' : 'application/json'
               },
               body : JSON.stringify({
-                id : 1
+                mail : this.state.username,
+                password : this.state.password
               })
           })
           .then((response) => response.json())
           .then((res) => {
-              AsyncStorage.setItem('user', JSON.stringify(res.user[0]) );
+
+            console.log(this.state.username, this.state.password)
             
-              this._retrieveData('user')
+            if (res.success != false)
+            {
+                AsyncStorage.setItem('user', JSON.stringify(res.user[0]) );
+                
+                this._retrieveData('user')
+            }
+            else
+            {
+                Alert.alert('🤭 Erreur', res.error)
+            }
+
               
           })
 
@@ -64,8 +76,9 @@ class Login extends React.Component {
       };
       
       render() {
-        {AsyncStorage.removeItem('user')}
+        {/*AsyncStorage.removeItem('user')*/}
         {/*this._retrieveData('username')*/}
+        this._retrieveData('username')
         return (
             <ScrollView>
                 <View style={ styles.container }>
@@ -77,8 +90,12 @@ class Login extends React.Component {
                             style={ styles.busImage }
                         />
                     </View>
-                    <TextInput onChangeText={(text) => this.setState({ username : text }) } style={ styles.textInput } placeholder={"Identifiants"}/>
                     <TextInput 
+                    onChangeText={(text) => this.setState({ username : text }) } 
+                    style={ styles.textInput } 
+                    placeholder={"Identifiants"}/>
+                    <TextInput 
+                    onChangeText={(text) => this.setState({ password : text }) }
                     secureTextEntry={true}
                     style={ styles.textInput } 
                     placeholder={"Mot de passe"}/>

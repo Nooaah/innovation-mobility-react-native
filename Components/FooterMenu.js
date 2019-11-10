@@ -1,6 +1,6 @@
 import React from 'react'
 import { Footer, FooterTab, Button, Icon } from 'native-base';
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage, View, StyleSheet } from 'react-native'
 
 class FooterMenu extends React.Component {
     constructor(props) {
@@ -29,30 +29,37 @@ class FooterMenu extends React.Component {
     const nav = this.props.nav
 
         return(
-        <Footer>
-            <FooterTab style={{backgroundColor:"#00a8ff" }}>
-                <Button 
-                active={ nav.navigation.state.routeName == 'Profil' ? true : false }
-                onPress={ () => this._retrieveData('Profil') }>
-                    <Icon style={{ color : 'white' }} name="person" />
-                </Button>
-                <Button
-                active={ nav.navigation.state.routeName == 'Shop' ? true : false }
-                onPress={ () => this._retrieveData('Shop') }>
-                    <Icon style={{ color : 'white' }} name="home" />
-                </Button>
-                <Button>
-                    <Icon style={{ color : 'white' }} name="navigate" />
-                </Button>
-                <Button
-                active={ nav.navigation.state.routeName == 'Parametres' ? true : false }
-                onPress={ () => this._retrieveData('Parametres')} >
-                    <Icon style={{ color : 'white' }} name="heart" />
-                </Button>
-            </FooterTab>
-        </Footer>
+            <Footer>
+                <FooterTab style={{backgroundColor:"#00a8ff" }}>
+                    <Button 
+                    active={ nav.navigation.state.routeName == 'Profil' ? true : false }
+                    onPress={ () => this._retrieveData('Profil') }>
+                        <Icon style={{ color : 'white' }} name="person" />
+                    </Button>
+                    <Button
+                    active={ nav.navigation.state.routeName == 'Shop' ? true : false }
+                    onPress={ () => this._retrieveData('Shop') }>
+                        <Icon style={{ color : 'white' }} name="home" />
+                    </Button>
+                    <Button>
+                        <Icon style={{ color : 'white' }} name="navigate" />
+                    </Button>
+                    <Button
+                    active={ nav.navigation.state.routeName == 'Parametres' ? true : false }
+                    onPress={ () => this._retrieveData('Parametres')} >
+                        <Icon style={{ color : 'white' }} name="heart" />
+                    </Button>
+                </FooterTab>
+            </Footer>
         )
     }
 }
+
+var styles = StyleSheet.create({
+    fixed: {
+      position: 'absolute',
+      bottom: 30
+    }
+  })
 
 export default FooterMenu
