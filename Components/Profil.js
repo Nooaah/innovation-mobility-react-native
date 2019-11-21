@@ -1,14 +1,46 @@
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, AsyncStorage } from 'react-native'
 import { Footer, FooterTab, Button, Icon } from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import FooterMenu from '../Components/FooterMenu'
 
 
 class Profil extends React.Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            points : 0,
+            resultPoints : 0
+        }
+    }
+
+    refreshPoints(user) {
+        if (this.state.resultPoints == 0) {
+            fetch('http://ec2-3-17-12-13.us-east-2.compute.amazonaws.com/api-wimo/getUserById', {
+                method : 'POST',
+                headers : {
+                    'Accept' : 'application/json',
+                    'Content-Type' : 'application/json'
+                },
+                body : JSON.stringify({
+                  id : user.id
+                })
+            })
+            .then((response) => response.json())
+            .then((res) => {
+                console.log("fait", res)
+                this.setState({ points : res.user[0].points, resultPoints : 1 });
+            })
+        }
+    }
+
+    
     render() {
         var user = this.props.navigation.state.params.user
         user = JSON.parse(user);
+        {  this.refreshPoints(user)  }
+        console.log( this.state.points );
         //(user)
         //Faire l'appel API pour récupérer dans la base ici
         return (
@@ -26,7 +58,7 @@ class Profil extends React.Component {
                     animation="pulse"
                     iterationCount="infinite"
                     style={{ textAlign : 'center', fontSize : 40, marginTop : -120, color : '#00a8ff', fontWeight : 'bold' }}>
-                    { user.points }
+                    { this.state.points }
                     </Animatable.Text>
 
                 </View>

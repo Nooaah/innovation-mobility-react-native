@@ -48,7 +48,7 @@ class Login extends React.Component {
             
             if (res.success != false)
             {
-                AsyncStorage.setItem('user', JSON.stringify(res.user[0]) );
+                AsyncStorage.setItem('user', JSON.stringify(res.user[0]));
                 
                 this._retrieveData('user')
             }
