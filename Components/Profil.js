@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Image, AsyncStorage } from 'react-native'
+import { View, Text, Image, AsyncStorage, StyleSheet, TextInput, Alert } from 'react-native'
 import { Footer, FooterTab, Button, Icon } from 'native-base';
 import * as Animatable from 'react-native-animatable';
 import FooterMenu from '../Components/FooterMenu'
@@ -11,7 +11,8 @@ class Profil extends React.Component {
         super(props);
         this.state = {
             points : 0,
-            resultPoints : 0
+            resultPoints : 0,
+            code : ""
         }
     }
 
@@ -29,10 +30,41 @@ class Profil extends React.Component {
             })
             .then((response) => response.json())
             .then((res) => {
-                console.log("fait", res)
                 this.setState({ points : res.user[0].points, resultPoints : 1 });
             })
         }
+    }
+
+    addCode() {
+        if (this.state.code == "") {
+            Alert.alert(
+                '✋ Erreur',
+                'Votre code est vide',
+                [
+                    {
+                        text: 'Recommencer'
+                    }
+                ],
+                {cancelable: false},
+              );
+        }
+        else {
+            Alert.alert(
+                '➕ Ajouter ce code ?',
+                this.state.code,
+                [
+                    {
+                      text: 'Oui', 
+                      onPress: () => console.log('Code ajouté')
+                    },
+                    {
+                        text: 'Annuler'
+                    }
+                ],
+                {cancelable: false},
+              );
+        }
+
     }
 
     
@@ -40,9 +72,6 @@ class Profil extends React.Component {
         var user = this.props.navigation.state.params.user
         user = JSON.parse(user);
         {  this.refreshPoints(user)  }
-        console.log( this.state.points );
-        //(user)
-        //Faire l'appel API pour récupérer dans la base ici
         return (
             <View style={{ flex : 1, justifyContent : 'center', alignItems : 'center' }}>
                 <View style={{ flex : 1, marginTop : 30 }}>
@@ -63,6 +92,14 @@ class Profil extends React.Component {
 
                 </View>
 
+                <View style={{ flex : 1 }}>
+                    <TextInput 
+                        onChangeText={(text) => this.setState({ code : text }) } 
+                        style={ styles.textInput } 
+                        placeholder={"Ajouter un code"}/>
+                        <Button onPress={() => this.addCode()} info style={{ marginTop : 20 , alignContent : 'center', justifyContent : 'center' }} ><Text style={{ color : 'white' }}> Ajouter </Text></Button>
+                </View>
+
                 <FooterMenu nav={this.props}/>
 
 
@@ -70,5 +107,16 @@ class Profil extends React.Component {
         )
     }
 }
+
+const styles = StyleSheet.create({
+    textInput : {
+        borderColor : 'transparent',
+        borderBottomColor : 'grey',
+        borderWidth: 1,
+        height : 40,
+        width : 200,
+        textAlign : 'center'
+    }
+})
 
 export default Profil 
